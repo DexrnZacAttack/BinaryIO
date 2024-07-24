@@ -1,0 +1,33 @@
+{
+  "name": "binaryio.js",
+  "version": "1.0.1",
+  "description": "BinaryIO for Node and Web environments, allows for reading/writing data like a DataView but with built in position tracking.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "rd dist /s /q && tsc --project ./tsconfig.build.json",
+    "dev": "tsc --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DexrnZacAttack/BinaryIO.git"
+  },
+  "keywords": [
+    "DataView",
+    "BinaryReader",
+    "BinaryWriter",
+    "IO",
+    "data",
+    "reading",
+    "writing",
+    "position",
+    "endianness"
+  ],
+  "author": "Dexrn ZacAttack <dexrn@hotmail.com> (https://dexrnzacattack.github.io/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DexrnZacAttack/BinaryIO/issues"
+  },
+  "homepage": "https://github.com/DexrnZacAttack/BinaryIO#readme"
+}
