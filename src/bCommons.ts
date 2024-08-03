@@ -71,4 +71,9 @@ export class bCommons {
     public setEndianness(isLittleEndian: boolean): void {
         this.isLittle = isLittleEndian;
     }
+
+    /** Returns the endianness as a boolean to signify whether or not it is little endian. */
+    public get getEndianness(): boolean {
+        return this.isLittle;
+    }
 }
