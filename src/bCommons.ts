@@ -10,25 +10,47 @@
 */
 
 export class bCommons {
-    // TODO: make it not use DataView.
-    protected dv: DataView;
+    protected buffer: Uint8Array;
     protected isLittle: boolean;
     protected curPos: number;
 
-    constructor(dv: DataView, isLittle: boolean = false, curPos = 0) {
-        this.dv = dv;
+    constructor(buffer: Uint8Array | ArrayBuffer | DataView, isLittle: boolean = false, curPos = 0) {
+        this.buffer = buffer instanceof ArrayBuffer
+            ? new Uint8Array(buffer)
+        : buffer instanceof DataView
+            ? new Uint8Array(buffer.buffer)
+        : buffer;
         this.isLittle = isLittle;
         this.curPos = curPos;
     }
 
+    /** Creates a new array with the chosen size with offset 0 being the chosen offset provided 
+     * @param size New size
+     * @param offset Copies the data starting from this offset
+     * @param preservePos Don't change the position when resizing
+     * @warning Turning on preservePos can be unsafe, specifically when making the buffer smaller, as the pointer can go out of bounds.
+    */
+    public setBufferSize(size: number, offset = 0, preservePos = false) {
+        if (offset > this.byteLength) {
+            throw new Error('Offset is greater than the current length of the buffer.');
+        }
+
+        const newBuffer = new Uint8Array(size);
+        newBuffer.set(this.buffer.slice(offset, this.byteLength));
+        this.buffer = newBuffer;
+
+        if (!preservePos)
+            this.curPos = Math.max(0, this.curPos - offset);
+    } 
+
     /** Returns the ArrayBuffer of the entire stream. */
-    public get buffer(): ArrayBuffer {
-        return this.dv.buffer;
+    public get arrayBuffer(): ArrayBuffer {
+        return this.buffer.buffer;
     }
 
     /** Equivalent to ArrayBuffer.byteLength */
     public get byteLength(): number {
-        return this.dv.buffer.byteLength;
+        return this.buffer.length;
     }
 
     /** Equivalent to ArrayBuffer.slice
@@ -36,7 +58,7 @@ export class bCommons {
      * @param end Where to end
     */
     public slice(start: number, end?: number): ArrayBuffer {
-        return this.dv.buffer.slice(start, end);
+        return this.buffer.slice(start, end);
     }
 
     /** Increments the position in the stream
