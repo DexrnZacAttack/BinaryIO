@@ -101,7 +101,7 @@ export class bReader extends bCommons {
         return (short << 16) >> 16;
     }
 
-    /** Reads a UInt24
+    /** Reads a UInt24 (24 bit unsigned integer)
      * @param isLittleEndian Whether or not to read as Little Endian
      * @param peek Whether or not to peek, which doesn't increment the position in the stream.
     */
@@ -124,7 +124,7 @@ export class bReader extends bCommons {
         return uint24;
     }
 
-    /** Reads an Int24
+    /** Reads an Int24 (24 bit signed integer)
      * @param isLittleEndian Whether or not to read as Little Endian
      * @param peek Whether or not to peek, which doesn't increment the position in the stream.
      */
@@ -205,6 +205,177 @@ export class bReader extends bCommons {
         return int | 0;
     }
 
+    /** Reads an Int40 (40-bit signed integer)
+     * @param isLittleEndian Whether or not to read as Little Endian
+     * @param peek Whether or not to peek, which doesn't increment the position in the stream.
+     */
+    public readInt40(isLittleEndian = this.isLittle, peek: boolean = false): bigint {
+        const bytes = [
+            this.buffer[this.curPos]!,
+            this.buffer[this.curPos + 1]!,
+            this.buffer[this.curPos + 2]!,
+            this.buffer[this.curPos + 3]!,
+            this.buffer[this.curPos + 4]!,
+        ];
+
+        let int40: bigint = 0n;
+        
+        if (isLittleEndian) {
+            int40 = bytes.reduce((acc, byte, i) => acc | (BigInt(byte) << (8n * BigInt(i))), 0n);
+        } else {
+            int40 = bytes.reduce((acc, byte, i) => acc | (BigInt(byte) << (8n * BigInt(4 - i))), 0n);
+        }
+
+        if (!peek) {
+            this.curPos += 5; 
+        }
+        
+        return (int40 & (1n << 39n)) !== 0n ? int40 - (1n << 40n) : int40;
+    }
+
+    /** Reads an UInt40 (40-bit unsigned integer)
+     * @param isLittleEndian Whether or not to read as Little Endian
+     * @param peek Whether or not to peek, which doesn't increment the position in the stream.
+     */
+    public readUInt40(isLittleEndian = this.isLittle, peek: boolean = false): bigint {
+        const bytes = [
+            this.buffer[this.curPos]!,
+            this.buffer[this.curPos + 1]!,
+            this.buffer[this.curPos + 2]!,
+            this.buffer[this.curPos + 3]!,
+            this.buffer[this.curPos + 4]!,
+        ];
+
+        let uint40: bigint = 0n;
+        if (isLittleEndian) {
+            uint40 = bytes.reduce((acc, byte, i) => acc | (BigInt(byte) << (8n * BigInt(i))), 0n);
+        } else {
+            uint40 = bytes.reduce((acc, byte, i) => acc | (BigInt(byte) << (8n * BigInt(4 - i))), 0n);
+        }
+
+        if (!peek) {
+            this.curPos += 5;
+        }
+        
+        return uint40;
+    }
+
+    /** Reads an Int48 (48-bit signed integer)
+     * @param isLittleEndian Whether or not to read as Little Endian
+     * @param peek Whether or not to peek, which doesn't increment the position in the stream.
+     */
+    public readInt48(isLittleEndian = this.isLittle, peek: boolean = false): bigint {
+        const bytes = [
+            this.buffer[this.curPos]!,
+            this.buffer[this.curPos + 1]!,
+            this.buffer[this.curPos + 2]!,
+            this.buffer[this.curPos + 3]!,
+            this.buffer[this.curPos + 4]!,
+            this.buffer[this.curPos + 5]!,
+        ];
+
+        let int48: bigint = 0n;
+        
+        if (isLittleEndian) {
+            int48 = bytes.reduce((acc, byte, i) => acc | (BigInt(byte) << (8n * BigInt(i))), 0n);
+        } else {
+            int48 = bytes.reduce((acc, byte, i) => acc | (BigInt(byte) << (8n * BigInt(5 - i))), 0n);
+        }
+
+        if (!peek) {
+            this.curPos += 6; 
+        }
+        
+        return (int48 & (1n << 47n)) !== 0n ? int48 - (1n << 48n) : int48;
+    }
+    
+    /** Reads an UInt48 (48-bit unsigned integer)
+     * @param isLittleEndian Whether or not to read as Little Endian
+     * @param peek Whether or not to peek, which doesn't increment the position in the stream.
+     */
+    public readUInt48(isLittleEndian = this.isLittle, peek: boolean = false): bigint {
+        const bytes = [
+            this.buffer[this.curPos]!,
+            this.buffer[this.curPos + 1]!,
+            this.buffer[this.curPos + 2]!,
+            this.buffer[this.curPos + 3]!,
+            this.buffer[this.curPos + 4]!,
+            this.buffer[this.curPos + 5]!,
+        ];
+
+        let uint48: bigint = 0n;
+        if (isLittleEndian) {
+            uint48 = bytes.reduce((acc, byte, i) => acc | (BigInt(byte) << (8n * BigInt(i))), 0n);
+        } else {
+            uint48 = bytes.reduce((acc, byte, i) => acc | (BigInt(byte) << (8n * BigInt(5 - i))), 0n);
+        }
+
+        if (!peek) {
+            this.curPos += 6;
+        }
+        
+        return uint48;
+    }
+
+    /** Reads an Int56 (56-bit signed integer)
+     * @param isLittleEndian Whether or not to read as Little Endian
+     * @param peek Whether or not to peek, which doesn't increment the position in the stream.
+     */
+    public readInt56(isLittleEndian = this.isLittle, peek: boolean = false): bigint {
+        const bytes = [
+            this.buffer[this.curPos]!,
+            this.buffer[this.curPos + 1]!,
+            this.buffer[this.curPos + 2]!,
+            this.buffer[this.curPos + 3]!,
+            this.buffer[this.curPos + 4]!,
+            this.buffer[this.curPos + 5]!,
+            this.buffer[this.curPos + 6]!,
+        ];
+
+        let int56: bigint = 0n;
+        
+        if (isLittleEndian) {
+            int56 = bytes.reduce((acc, byte, i) => acc | (BigInt(byte) << (8n * BigInt(i))), 0n);
+        } else {
+            int56 = bytes.reduce((acc, byte, i) => acc | (BigInt(byte) << (8n * BigInt(6 - i))), 0n);
+        }
+
+        if (!peek) {
+            this.curPos += 7; 
+        }
+        
+        return (int56 & (1n << 55n)) !== 0n ? int56 - (1n << 56n) : int56;
+    }
+    
+    /** Reads an UInt56 (56-bit unsigned integer)
+     * @param isLittleEndian Whether or not to read as Little Endian
+     * @param peek Whether or not to peek, which doesn't increment the position in the stream.
+     */
+    public readUInt56(isLittleEndian = this.isLittle, peek: boolean = false): bigint {
+        const bytes = [
+            this.buffer[this.curPos]!,
+            this.buffer[this.curPos + 1]!,
+            this.buffer[this.curPos + 2]!,
+            this.buffer[this.curPos + 3]!,
+            this.buffer[this.curPos + 4]!,
+            this.buffer[this.curPos + 5]!,
+            this.buffer[this.curPos + 6]!,
+        ];
+
+        let uint56: bigint = 0n;
+        if (isLittleEndian) {
+            uint56 = bytes.reduce((acc, byte, i) => acc | (BigInt(byte) << (8n * BigInt(i))), 0n);
+        } else {
+            uint56 = bytes.reduce((acc, byte, i) => acc | (BigInt(byte) << (8n * BigInt(6 - i))), 0n);
+        }
+
+        if (!peek) {
+            this.curPos += 7;
+        }
+        
+        return uint56;
+    }
+
     /** Reads a Long
      * @param isLittleEndian Whether or not to read as Little Endian
      * @param peek Whether or not to peek, which doesn't increment the position in the stream.
@@ -260,6 +431,77 @@ export class bReader extends bCommons {
         return ulong;
     }
 
+    /** Reads an Int128 (128-bit signed integer)
+     * @param isLittleEndian Whether or not to read as Little Endian
+     * @param peek Whether or not to peek, which doesn't increment the position in the stream.
+    */
+    public readInt128(isLittleEndian = this.isLittle, peek: boolean = false): BigInt {
+        const bytes = [
+            this.buffer[this.curPos]!,
+            this.buffer[this.curPos + 1]!,
+            this.buffer[this.curPos + 2]!,
+            this.buffer[this.curPos + 3]!,
+            this.buffer[this.curPos + 4]!,
+            this.buffer[this.curPos + 5]!,
+            this.buffer[this.curPos + 6]!,
+            this.buffer[this.curPos + 7]!,
+            this.buffer[this.curPos + 8]!,
+            this.buffer[this.curPos + 9]!,
+            this.buffer[this.curPos + 10]!,
+            this.buffer[this.curPos + 11]!,
+            this.buffer[this.curPos + 12]!,
+            this.buffer[this.curPos + 13]!,
+            this.buffer[this.curPos + 14]!,
+            this.buffer[this.curPos + 15]!
+        ];
+
+        let int128: bigint = 0n;
+        if (isLittleEndian) {
+            int128 = bytes.reduce((acc, byte, i) => acc | (BigInt(byte) << (8n * BigInt(i))), 0n);
+        } else {
+            int128 = bytes.reduce((acc, byte, i) => acc | (BigInt(byte) << (8n * BigInt(15 - i))), 0n);
+        }
+
+        if (!peek)
+            this.curPos += 16;
+        return (int128 >= (1n << 127n)) ? int128 - (1n << 128n) : int128;
+    }
+
+    /** Reads a UInt128 (128-bit unsigned integer)
+     * @param isLittleEndian Whether or not to read as Little Endian
+     * @param peek Whether or not to peek, which doesn't increment the position in the stream.
+     */
+    public readUInt128(isLittleEndian = this.isLittle, peek: boolean = false): BigInt {
+        const bytes = [
+            this.buffer[this.curPos]!,
+            this.buffer[this.curPos + 1]!,
+            this.buffer[this.curPos + 2]!,
+            this.buffer[this.curPos + 3]!,
+            this.buffer[this.curPos + 4]!,
+            this.buffer[this.curPos + 5]!,
+            this.buffer[this.curPos + 6]!,
+            this.buffer[this.curPos + 7]!,
+            this.buffer[this.curPos + 8]!,
+            this.buffer[this.curPos + 9]!,
+            this.buffer[this.curPos + 10]!,
+            this.buffer[this.curPos + 11]!,
+            this.buffer[this.curPos + 12]!,
+            this.buffer[this.curPos + 13]!,
+            this.buffer[this.curPos + 14]!,
+            this.buffer[this.curPos + 15]!
+        ];
+
+        let uint128: bigint = 0n;
+        if (isLittleEndian) {
+            uint128 = bytes.reduce((acc, byte, i) => acc | (BigInt(byte) << (8n * BigInt(i))), 0n);
+        } else {
+            uint128 = bytes.reduce((acc, byte, i) => acc | (BigInt(byte) << (8n * BigInt(15 - i))), 0n);
+        }
+        if (!peek)
+            this.curPos += 16;
+        return uint128;
+    }
+
     /** Reads a Float
      * @param isLittleEndian Whether or not to read as Little Endian
      * @param peek Whether or not to peek, which doesn't increment the position in the stream.
@@ -306,7 +548,17 @@ export class bReader extends bCommons {
         return doubleArray[0];
     }
 
-
+    /** Reads a UTF32 string
+     * @param Length Length of the string in bytes, including null bytes. By default it reads a UShort before the string.
+     * @param isLittleEndian Whether or not to read as Little Endian
+    */
+    public readString32(length: number = this.readUShort(), isLittleEndian = this.isLittle): string {
+        let str = "";
+        for (var i = 0; i < (length / 4); i++) {
+            str += String.fromCodePoint(this.readUInt(isLittleEndian));
+        }
+        return str.replace(/\x00/g, '');
+    }
 
     /** Reads a UTF16 string
      * @param Length Length of the string in bytes, including null bytes. By default it reads a UShort before the string.
@@ -350,7 +602,7 @@ export class bReader extends bCommons {
 
     /** Reads a null-terminated UTF8 string */
     public readNullTerminatedString8(): string {
-        // TODO: proper UTF8 support
+        // TODO: merge with readString8
         let str = "";
         while (true) {
             const byte = this.readByte();
@@ -367,6 +619,7 @@ export class bReader extends bCommons {
      * @param isLittleEndian Whether or not to read as Little Endian
      */
     public readNullTerminatedString16(isLittleEndian = this.isLittle): string {
+        // TODO: merge with readString16
         let str = "";
         while (true) {
             const char = this.readUShort(isLittleEndian);
