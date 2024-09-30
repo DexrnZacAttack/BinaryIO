@@ -27,12 +27,15 @@ export class bReader extends bCommons {
      * @returns The read bytes in an ArrayBuffer (Uint8Array)
     */
     public read(size: number): ArrayBuffer {
-        let ab: Uint8Array = new Uint8Array(size);
+        const ab = new Uint8Array(size);
         for (let i = 0; i < size; i++) {
-            ab[i] = this.readByte();
+            const byte = this.readByte(); 
+            ab[i] = byte;
         }
-        return ab;
+    
+        return ab.buffer;
     }
+    
 
     /** Reads a Byte
      * @param peek Whether or not to peek, which doesn't increment the position in the stream.
@@ -306,7 +309,7 @@ export class bReader extends bCommons {
 
 
     /** Reads a UTF16 string
-     * @param Length length of the string in bytes, including null bytes
+     * @param Length Length of the string in bytes, including null bytes. By default it reads a UShort before the string.
      * @param isLittleEndian Whether or not to read as Little Endian
     */
     public readString16(length: number = this.readUShort(), isLittleEndian = this.isLittle): string {
@@ -317,20 +320,37 @@ export class bReader extends bCommons {
         return str.replace(/\x00/g, '');
     }
 
-    /** Reads a UTF8 string
-     * @param length Length of the string in bytes
-    */
-    public readString8(length: number = this.readByte()): string {
-        // should maybe allow for reading until 0x00 byte.
+    /** Reads a UTF-8 string
+     * @param length Length of the string in bytes, by default it reads a UShort before the string.
+     */
+    public readString8(length: number = this.readUShort()): string {
         let str = "";
-        for (var i = 0; i < length; i++) {
-            str += String.fromCharCode(this.readByte());
+        let bytesRead = 0;
+
+        while (bytesRead < length) {
+            const char = this.readByte();
+
+            if (char < 0x80) {
+                str += String.fromCharCode(char);
+                bytesRead++;
+            } else if (char < 0xE0) {
+                str += String.fromCharCode(((char & 0x1F) << 6) | (this.readByte() & 0x3F));
+                bytesRead += 2;
+            } else if (char < 0xF0) {
+                str += String.fromCharCode(((char & 0x0F) << 12) | ((this.readByte() & 0x3F) << 6) | (this.readByte() & 0x3F));
+                bytesRead += 3;
+            } else {
+                str += String.fromCodePoint(((char & 0x07) << 18) | ((this.readByte() & 0x3F) << 12) | ((this.readByte() & 0x3F) << 6) | (this.readByte() & 0x3F));
+                bytesRead += 4;
+            }
         }
+
         return str;
     }
 
     /** Reads a null-terminated UTF8 string */
     public readNullTerminatedString8(): string {
+        // TODO: proper UTF8 support
         let str = "";
         while (true) {
             const byte = this.readByte();
