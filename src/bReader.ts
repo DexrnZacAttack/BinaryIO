@@ -21,7 +21,6 @@ export class bReader extends bCommons {
         super(readBuffer, isLittle, curPos);
     }
 
-
     /** Reads {size} amount of bytes
      * @param size How many bytes to read
      * @returns The read bytes in an ArrayBuffer (Uint8Array)

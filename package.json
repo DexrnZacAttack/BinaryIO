@@ -8,7 +8,7 @@
   "scripts": {
     "build": "rimraf dist && tsc --project ./tsconfig.build.json",
     "dev": "tsc --watch",
-    "test": "cd testing && tsx writeTest.ts"
+    "test": "cd testing && npx tsx writeTest.ts"
   },
   "repository": {
     "type": "git",
