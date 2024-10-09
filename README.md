@@ -17,6 +17,7 @@ Binary reading and writing for Node and Web environments,.
  - `Int56` (Signed + Unsigned)
  - `Long` (Signed + Unsigned)
  - `Int128` (Signed + Unsigned)
+ - `Int256` (Signed + Unsigned)
  - `UTF8`
  - `UTF16` 
  - `UTF32` 

@@ -32,8 +32,10 @@ const randlong = randNumber(bTypes.LONG_MIN_VALUE, bTypes.LONG_MAX_VALUE);
 const randulong = randNumber(bTypes.ULONG_MIN_VALUE, bTypes.ULONG_MAX_VALUE);
 const randint128 = randNumber(bTypes.INT128_MIN_VALUE, bTypes.INT128_MAX_VALUE);
 const randuint128 = randNumber(bTypes.UINT128_MIN_VALUE, bTypes.UINT128_MAX_VALUE);
+const randint256 = randNumber(bTypes.INT256_MIN_VALUE, bTypes.INT256_MAX_VALUE);
+const randuint256 = randNumber(bTypes.UINT256_MIN_VALUE, bTypes.UINT256_MAX_VALUE);
 
-const writer = new bWriter(new ArrayBuffer((273) * 2));
+const writer = new bWriter(new ArrayBuffer((337) * 2));
 function write(endian: boolean) {
     console.log(`Writing ${endian ? "Little" : "Big"} Endian`);
     writer.setEndianness(endian);
@@ -91,6 +93,12 @@ function write(endian: boolean) {
 
     console.log(`Writing int128 0x${BigInt(randint128).toString(16)}`);
     writer.writeInt128(BigInt(randint128));
+
+    console.log(`Writing uint256 0x${BigInt(randuint256).toString(16)}`);
+    writer.writeUInt256(BigInt(randuint256));
+
+    console.log(`Writing int256 0x${BigInt(randint256).toString(16)}`);
+    writer.writeInt256(BigInt(randint256));
 
     console.log(`Writing float 3.14159`);
     writer.writeFloat(3.14159);
@@ -201,6 +209,14 @@ function compare(endian: boolean) {
     const int128 = reader.readInt128();
     console.log(`Read signed int128 (should be ${randint128}):`, int128);
     if (int128 !== randint128) throw new Error(`${randint128} (signed int128) does not match ${int128}!`);
+
+    const uint256 = reader.readUInt256();
+    console.log(`Read unsigned uint256 (should be ${randuint256}):`, uint256);
+    if (uint256 !== randuint256) throw new Error(`${randuint256} (unsigned uint256) does not match ${uint256}!`);
+
+    const int256 = reader.readInt256();
+    console.log(`Read signed int256 (should be ${randint256}):`, int256);
+    if (int256 !== randint256) throw new Error(`${randint256} (signed int256) does not match ${int256}!`);
 
     const float = reader.readFloat();
     console.log(`Read float (should be 3.14159):`, float);

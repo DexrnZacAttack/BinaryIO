@@ -478,6 +478,56 @@ export class bWriter extends bCommons {
         this.curPos += 16;
     }
 
+    /** Writes a UInt256 (256-bit unsigned integer)
+     * @param value The value to write.
+     * @param isLittleEndian Whether or not to write as Little Endian
+     */
+    public writeUInt256(value: bigint, isLittleEndian = this.isLittle): void {
+        if (value < bTypes.UINT256_MIN_VALUE || value > bTypes.UINT256_MAX_VALUE)
+            throw new RangeError(`Value (${value}) out of range for an unsigned int256`);
+
+        if (isLittleEndian) {
+            for (let i = 0; i < 32; i++) {
+                this.buffer[this.curPos + i] = Number(value & 0xFFn);
+                value >>= 8n;
+            }
+        } else {
+            for (let i = 31; i >= 0; i--) {
+                this.buffer[this.curPos + i] = Number(value & 0xFFn);
+                value >>= 8n;
+            }
+        }
+
+        this.curPos += 32;
+    }
+
+    /** Writes an Int256 (256-bit signed integer)
+     * @param value The value to write.
+     * @param isLittleEndian Whether or not to write as Little Endian
+     */
+    public writeInt256(value: bigint, isLittleEndian = this.isLittle): void {
+        if (value < bTypes.INT256_MIN_VALUE || value > bTypes.INT256_MAX_VALUE)
+            throw new RangeError(`Value (${value}) out of range for an int256`);
+
+        if (value < 0n) {
+            value = (1n << 256n) + value;
+        }
+
+        if (isLittleEndian) {
+            for (let i = 0; i < 32; i++) {
+                this.buffer[this.curPos + i] = Number(value & 0xFFn);
+                value >>= 8n;
+            }
+        } else {
+            for (let i = 31; i >= 0; i--) {
+                this.buffer[this.curPos + i] = Number(value & 0xFFn);
+                value >>= 8n;
+            }
+        }
+
+        this.curPos += 32;
+    }
+
     /** Writes a Float
      * @param value The value to write.
      * @param isLittleEndian Whether or not to write as Little Endian
@@ -499,7 +549,6 @@ export class bWriter extends bCommons {
 
         this.curPos += 4;
     }
-
 
     /** Writes a Double
      * @param value The value to write.
