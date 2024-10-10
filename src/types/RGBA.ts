@@ -24,6 +24,14 @@ export class RGBColor implements RGBA {
     toNumber(): number {
         return (this.red << 24) | (this.green << 16) | (this.blue << 8) | (this.alpha !== undefined ? this.alpha : 255);
     }
+
+    /**
+     * Converts an RGB(A) value to an RGBA interface.
+     * @returns RGBA interface from RGB(A) value
+     */
+    toRGBAInterface(): RGBA {
+        return {red: this.red, green: this.green, blue: this.blue, alpha: this.alpha};
+    }
 }
 
 /** RGB pixel formats */
