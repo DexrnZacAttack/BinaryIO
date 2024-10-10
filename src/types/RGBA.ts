@@ -6,6 +6,10 @@ export interface RGBA {
     alpha?: number;
 }
 
+export function RGBAtoRGBColor(rgba: RGBA): RGBColor {
+    return new RGBColor(rgba.red, rgba.green, rgba.blue, rgba.alpha);
+}
+
 export class RGBColor implements RGBA {
     /**
      * RGB(A) color class, allows for RGB(A) colors to be converted to a Number, among other things.

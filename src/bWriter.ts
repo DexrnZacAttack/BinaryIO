@@ -11,7 +11,7 @@
 
 import { bCommons } from "./bCommons.js";
 import { bTypes } from './bExtra.js';
-import { RGBColor, RGBFormat } from "./types/RGBA.js";
+import { RGBA, RGBColor, RGBFormat } from "./types/RGBA.js";
 
 export class bWriter extends bCommons {
     /** Creates an endianness-aware binary writer with built-in position tracking
@@ -639,7 +639,7 @@ export class bWriter extends bCommons {
             this.writeByte(0); 
     }
 
-    public writeRGB(rgb: RGBColor, format: RGBFormat) {
+    public writeRGB(rgb: RGBColor | RGBA, format: RGBFormat) {
         if (rgb.alpha == undefined)
             rgb.alpha = 0xFF;
 
