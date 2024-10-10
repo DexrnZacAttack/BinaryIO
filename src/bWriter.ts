@@ -11,6 +11,7 @@
 
 import { bCommons } from "./bCommons.js";
 import { bTypes } from './bExtra.js';
+import { RGBColor, RGBFormat } from "./types/RGBA.js";
 
 export class bWriter extends bCommons {
     /** Creates an endianness-aware binary writer with built-in position tracking
@@ -638,4 +639,81 @@ export class bWriter extends bCommons {
             this.writeByte(0); 
     }
 
+    public writeRGB(rgb: RGBColor, format: RGBFormat) {
+        if (rgb.alpha == undefined)
+            rgb.alpha = 0xFF;
+
+        switch (format) {
+            case RGBFormat.RGB:
+                this.writeByte(rgb.red);
+                this.writeByte(rgb.green);
+                this.writeByte(rgb.blue);
+                break;
+            case RGBFormat.RGBA:
+                this.writeByte(rgb.red);
+                this.writeByte(rgb.green);
+                this.writeByte(rgb.blue);
+                this.writeByte(rgb.alpha);
+                break;
+            case RGBFormat.ARGB:
+                this.writeByte(rgb.alpha);
+                this.writeByte(rgb.red);
+                this.writeByte(rgb.green);
+                this.writeByte(rgb.blue);
+                break;
+            case RGBFormat.BGR:
+                this.writeByte(rgb.blue);
+                this.writeByte(rgb.green);
+                this.writeByte(rgb.red);
+                break;
+            case RGBFormat.BGRA:
+                this.writeByte(rgb.blue);
+                this.writeByte(rgb.green);
+                this.writeByte(rgb.red);
+                this.writeByte(rgb.alpha);
+                break;
+            case RGBFormat.ABGR:
+                this.writeByte(rgb.alpha);
+                this.writeByte(rgb.blue);
+                this.writeByte(rgb.green);
+                this.writeByte(rgb.red);
+                break;
+            case RGBFormat.GBR:
+                this.writeByte(rgb.green);
+                this.writeByte(rgb.blue);
+                this.writeByte(rgb.red);
+                break;
+            case RGBFormat.GBRA:
+                this.writeByte(rgb.green);
+                this.writeByte(rgb.blue);
+                this.writeByte(rgb.red);
+                this.writeByte(rgb.alpha);
+                break;
+            case RGBFormat.AGBR:
+                this.writeByte(rgb.alpha);
+                this.writeByte(rgb.green);
+                this.writeByte(rgb.blue);
+                this.writeByte(rgb.red);
+                break;
+            case RGBFormat.GRB:
+                this.writeByte(rgb.green);
+                this.writeByte(rgb.red);
+                this.writeByte(rgb.blue);
+                break;
+            case RGBFormat.GRBA:
+                this.writeByte(rgb.green);
+                this.writeByte(rgb.red);
+                this.writeByte(rgb.blue);
+                this.writeByte(rgb.alpha);
+                break;
+            case RGBFormat.AGRB:
+                this.writeByte(rgb.alpha);
+                this.writeByte(rgb.green);
+                this.writeByte(rgb.red);
+                this.writeByte(rgb.blue);
+                break;
+            default:
+                throw new Error(`Unknown format: ${format}`);
+        }
+    }
 }

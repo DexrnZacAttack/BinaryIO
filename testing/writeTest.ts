@@ -1,5 +1,6 @@
 import {bWriter, bReader, bTypes} from "../src/index.js";
 import * as fs from 'fs';
+import { RGBColor, RGBFormat } from "../src/types/RGBA.js";
 
 function randNumber(min: number | bigint, max: number | bigint): bigint | number {
     if (typeof min === 'bigint' || typeof max === 'bigint') {
@@ -34,8 +35,10 @@ const randint128 = randNumber(bTypes.INT128_MIN_VALUE, bTypes.INT128_MAX_VALUE);
 const randuint128 = randNumber(bTypes.UINT128_MIN_VALUE, bTypes.UINT128_MAX_VALUE);
 const randint256 = randNumber(bTypes.INT256_MIN_VALUE, bTypes.INT256_MAX_VALUE);
 const randuint256 = randNumber(bTypes.UINT256_MIN_VALUE, bTypes.UINT256_MAX_VALUE);
+const randrgba: RGBColor = new RGBColor(Number(randNumber(bTypes.BYTE_MIN_VALUE, bTypes.BYTE_MAX_VALUE)), Number(randNumber(bTypes.BYTE_MIN_VALUE, bTypes.BYTE_MAX_VALUE)), Number(randNumber(bTypes.BYTE_MIN_VALUE, bTypes.BYTE_MAX_VALUE)), 0xFF);
+const rgbString = `0x${randrgba.red.toString(16).toUpperCase().padStart(2, '0')}${randrgba.green.toString(16).toUpperCase().padStart(2, '0')}${randrgba.blue.toString(16).toUpperCase().padStart(2, '0')}${randrgba.alpha?.toString(16).toUpperCase().padStart(2, '0')}`;
 
-const writer = new bWriter(new ArrayBuffer((337) * 2));
+const writer = new bWriter(new ArrayBuffer((381) * 2));
 function write(endian: boolean) {
     console.log(`Writing ${endian ? "Little" : "Big"} Endian`);
     writer.setEndianness(endian);
@@ -123,6 +126,43 @@ function write(endian: boolean) {
 
     console.log(`Writing UTF32 string: "你好，世界！" ("Hello, world!" in Chinese (Simplified))`);
     writer.writeString32("你好，世界！", endian, true);
+
+    console.log(`Writing RGB ${rgbString}`);
+    writer.writeRGB(randrgba, RGBFormat.RGB);
+    
+    console.log(`Writing RGBA ${rgbString}`);
+    writer.writeRGB(randrgba, RGBFormat.RGBA);
+    
+    console.log(`Writing ARGB ${rgbString}`);
+    writer.writeRGB(randrgba, RGBFormat.ARGB);
+    
+    console.log(`Writing BGR ${rgbString}`);
+    writer.writeRGB(randrgba, RGBFormat.BGR);
+    
+    console.log(`Writing BGRA ${rgbString}`);
+    writer.writeRGB(randrgba, RGBFormat.BGRA);
+    
+    console.log(`Writing ABGR ${rgbString}`);
+    writer.writeRGB(randrgba, RGBFormat.ABGR);
+    
+    console.log(`Writing GBR ${rgbString}`);
+    writer.writeRGB(randrgba, RGBFormat.GBR);
+    
+    console.log(`Writing GBRA ${rgbString}`);
+    writer.writeRGB(randrgba, RGBFormat.GBRA);
+    
+    console.log(`Writing AGBR ${rgbString}`);
+    writer.writeRGB(randrgba, RGBFormat.AGBR);
+    
+    console.log(`Writing GRB ${rgbString}`);
+    writer.writeRGB(randrgba, RGBFormat.GRB);
+    
+    console.log(`Writing GRBA ${rgbString}`);
+    writer.writeRGB(randrgba, RGBFormat.GRBA);
+    
+    console.log(`Writing AGRB ${rgbString}`);
+    writer.writeRGB(randrgba, RGBFormat.AGRB);
+    
 }
 
 write(true);
@@ -249,4 +289,64 @@ function compare(endian: boolean) {
     const string32Chinese = reader.readString32();
     console.log(`Read UTF32 string (should be "你好，世界！" ("Hello, world!" in Chinese (Simplified))):`, string32Chinese);
     if (string32Chinese !== "你好，世界！") throw new Error(`"你好，世界！" (UTF32 string) does not match "${string32Chinese}"!`);
+
+    const rgb = reader.readRGB(RGBFormat.RGB);
+    const rgb2String = `0x${rgb.red.toString(16).toUpperCase().padStart(2, '0')}${rgb.green.toString(16).toUpperCase().padStart(2, '0')}${rgb.blue.toString(16).toUpperCase().padStart(2, '0')}${rgb.alpha?.toString(16).toUpperCase().padStart(2, '0')}`;
+    console.log(`Read RGB should be ${rgbString}:`, rgb2String);
+    if (JSON.stringify(rgb) != JSON.stringify(randrgba)) throw new Error(`${rgb2String} does not match ${rgbString}`);
+    
+    const rgba = reader.readRGB(RGBFormat.RGBA);
+    const rgba2String = `0x${rgba.red.toString(16).toUpperCase().padStart(2, '0')}${rgba.green.toString(16).toUpperCase().padStart(2, '0')}${rgba.blue.toString(16).toUpperCase().padStart(2, '0')}${rgba.alpha?.toString(16).toUpperCase().padStart(2, '0')}`;
+    console.log(`Read RGBA should be ${rgbString}:`, rgba2String);
+    if (JSON.stringify(rgba) !== JSON.stringify(randrgba)) throw new Error(`${rgba2String} does not match ${rgbString}`);
+    
+    const argb = reader.readRGB(RGBFormat.ARGB);
+    const argb2String = `0x${argb.red.toString(16).toUpperCase().padStart(2, '0')}${argb.green.toString(16).toUpperCase().padStart(2, '0')}${argb.blue.toString(16).toUpperCase().padStart(2, '0')}${argb.alpha?.toString(16).toUpperCase().padStart(2, '0')}`;
+    console.log(`Read ARGB should be ${rgbString}:`, argb2String);
+    if (JSON.stringify(argb) !== JSON.stringify(randrgba)) throw new Error(`${argb2String} does not match ${rgbString}`);
+    
+    const bgr = reader.readRGB(RGBFormat.BGR);
+    const bgr2String = `0x${bgr.red.toString(16).toUpperCase().padStart(2, '0')}${bgr.green.toString(16).toUpperCase().padStart(2, '0')}${bgr.blue.toString(16).toUpperCase().padStart(2, '0')}${bgr.alpha?.toString(16).toUpperCase().padStart(2, '0')}`;
+    console.log(`Read BGR should be ${rgbString}:`, bgr2String);
+    if (JSON.stringify(bgr) !== JSON.stringify(randrgba)) throw new Error(`${bgr2String} does not match ${rgbString}`);
+    
+    const bgra = reader.readRGB(RGBFormat.BGRA);
+    const bgra2String = `0x${bgra.red.toString(16).toUpperCase().padStart(2, '0')}${bgra.green.toString(16).toUpperCase().padStart(2, '0')}${bgra.blue.toString(16).toUpperCase().padStart(2, '0')}${bgra.alpha?.toString(16).toUpperCase().padStart(2, '0')}`;
+    console.log(`Read BGRA should be ${rgbString}:`, bgra2String);
+    if (JSON.stringify(bgra) !== JSON.stringify(randrgba)) throw new Error(`${bgra2String} does not match ${rgbString}`);
+    
+    const abgr = reader.readRGB(RGBFormat.ABGR);
+    const abgr2String = `0x${abgr.red.toString(16).toUpperCase().padStart(2, '0')}${abgr.green.toString(16).toUpperCase().padStart(2, '0')}${abgr.blue.toString(16).toUpperCase().padStart(2, '0')}${abgr.alpha?.toString(16).toUpperCase().padStart(2, '0')}`;
+    console.log(`Read ABGR should be ${rgbString}:`, abgr2String);
+    if (JSON.stringify(abgr) !== JSON.stringify(randrgba)) throw new Error(`${abgr2String} does not match ${rgbString}`);
+    
+    const gbr = reader.readRGB(RGBFormat.GBR);
+    const gbr2String = `0x${gbr.red.toString(16).toUpperCase().padStart(2, '0')}${gbr.green.toString(16).toUpperCase().padStart(2, '0')}${gbr.blue.toString(16).toUpperCase().padStart(2, '0')}${gbr.alpha?.toString(16).toUpperCase().padStart(2, '0')}`;
+    console.log(`Read GBR should be ${rgbString}:`, gbr2String);
+    if (JSON.stringify(gbr) !== JSON.stringify(randrgba)) throw new Error(`${gbr2String} does not match ${rgbString}`);
+    
+    const gbra = reader.readRGB(RGBFormat.GBRA);
+    const gbra2String = `0x${gbra.red.toString(16).toUpperCase().padStart(2, '0')}${gbra.green.toString(16).toUpperCase().padStart(2, '0')}${gbra.blue.toString(16).toUpperCase().padStart(2, '0')}${gbra.alpha?.toString(16).toUpperCase().padStart(2, '0')}`;
+    console.log(`Read GBRA should be ${rgbString}:`, gbra2String);
+    if (JSON.stringify(gbra) !== JSON.stringify(randrgba)) throw new Error(`${gbra2String} does not match ${rgbString}`);
+    
+    const agbr = reader.readRGB(RGBFormat.AGBR);
+    const agbr2String = `0x${agbr.red.toString(16).toUpperCase().padStart(2, '0')}${agbr.green.toString(16).toUpperCase().padStart(2, '0')}${agbr.blue.toString(16).toUpperCase().padStart(2, '0')}${agbr.alpha?.toString(16).toUpperCase().padStart(2, '0')}`;
+    console.log(`Read AGBR should be ${rgbString}:`, agbr2String);
+    if (JSON.stringify(agbr) !== JSON.stringify(randrgba)) throw new Error(`${agbr2String} does not match ${rgbString}`);
+    
+    const grb = reader.readRGB(RGBFormat.GRB);
+    const grb2String = `0x${grb.red.toString(16).toUpperCase().padStart(2, '0')}${grb.green.toString(16).toUpperCase().padStart(2, '0')}${grb.blue.toString(16).toUpperCase().padStart(2, '0')}${grb.alpha?.toString(16).toUpperCase().padStart(2, '0')}`;
+    console.log(`Read GRB should be ${rgbString}:`, grb2String);
+    if (JSON.stringify(grb) !== JSON.stringify(randrgba)) throw new Error(`${grb2String} does not match ${rgbString}`);
+    
+    const grba = reader.readRGB(RGBFormat.GRBA);
+    const grba2String = `0x${grba.red.toString(16).toUpperCase().padStart(2, '0')}${grba.green.toString(16).toUpperCase().padStart(2, '0')}${grba.blue.toString(16).toUpperCase().padStart(2, '0')}${grba.alpha?.toString(16).toUpperCase().padStart(2, '0')}`;
+    console.log(`Read GRBA should be ${rgbString}:`, grba2String);
+    if (JSON.stringify(grba) !== JSON.stringify(randrgba)) throw new Error(`${grba2String} does not match ${rgbString}`);
+    
+    const agrb = reader.readRGB(RGBFormat.AGRB);
+    const agrb2String = `0x${agrb.red.toString(16).toUpperCase().padStart(2, '0')}${agrb.green.toString(16).toUpperCase().padStart(2, '0')}${agrb.blue.toString(16).toUpperCase().padStart(2, '0')}${agrb.alpha?.toString(16).toUpperCase().padStart(2, '0')}`;
+    console.log(`Read AGRB should be ${rgbString}:`, agrb2String);
+    if (JSON.stringify(agrb) !== JSON.stringify(randrgba)) throw new Error(`${agrb2String} does not match ${rgbString}`);
 }

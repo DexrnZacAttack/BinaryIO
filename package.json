@@ -1,6 +1,6 @@
 {
   "name": "binaryio.js",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "BinaryIO for Node and Web environments, allows for reading/writing data like a DataView but with built in position tracking.",
   "type": "module",
   "main": "./dist/index.js",

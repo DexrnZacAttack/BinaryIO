@@ -20,7 +20,8 @@ Binary reading and writing for Node and Web environments,.
  - `Int256` (Signed + Unsigned)
  - `UTF8`
  - `UTF16` 
- - `UTF32` 
+ - `UTF32`
+ - `RGB` (Includes pixel formats like RGBA, ARGB, BGR, BGRA, etc.)
 
 ### To be supported
  - `MUTF`

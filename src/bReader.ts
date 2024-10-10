@@ -10,6 +10,7 @@
 */
 
 import { bCommons } from "./bCommons.js";
+import { RGBColor, RGBFormat } from "./types/RGBA.js";
 
 export class bReader extends bCommons {
     /** Creates an endianness-aware binary reader with built in position tracking
@@ -729,5 +730,84 @@ export class bReader extends bCommons {
         }
 
         return str;
+    }
+
+    public readRGB(format: RGBFormat): RGBColor {
+        const rgb: RGBColor = new RGBColor(0, 0, 0, 0xFF);
+    
+        switch (format) {
+            case RGBFormat.RGB:
+                rgb.red = this.readByte();
+                rgb.green = this.readByte();
+                rgb.blue = this.readByte();
+                break;
+            case RGBFormat.RGBA:
+                rgb.red = this.readByte();
+                rgb.green = this.readByte();
+                rgb.blue = this.readByte();
+                rgb.alpha = this.readByte();
+                break;
+            case RGBFormat.ARGB:
+                rgb.alpha = this.readByte();
+                rgb.red = this.readByte();
+                rgb.green = this.readByte();
+                rgb.blue = this.readByte();
+                break;
+            case RGBFormat.BGR:
+                rgb.blue = this.readByte();
+                rgb.green = this.readByte();
+                rgb.red = this.readByte();
+                break;
+            case RGBFormat.BGRA:
+                rgb.blue = this.readByte();
+                rgb.green = this.readByte();
+                rgb.red = this.readByte();
+                rgb.alpha = this.readByte();
+                break;
+            case RGBFormat.ABGR:
+                rgb.alpha = this.readByte();
+                rgb.blue = this.readByte();
+                rgb.green = this.readByte();
+                rgb.red = this.readByte();
+                break;
+            case RGBFormat.GBR:
+                rgb.green = this.readByte();
+                rgb.blue = this.readByte();
+                rgb.red = this.readByte();
+                break;
+            case RGBFormat.GBRA:
+                rgb.green = this.readByte();
+                rgb.blue = this.readByte();
+                rgb.red = this.readByte();
+                rgb.alpha = this.readByte();
+                break;
+            case RGBFormat.AGBR:
+                rgb.alpha = this.readByte();
+                rgb.green = this.readByte();
+                rgb.blue = this.readByte();
+                rgb.red = this.readByte();
+                break;
+            case RGBFormat.GRB:
+                rgb.green = this.readByte();
+                rgb.red = this.readByte();
+                rgb.blue = this.readByte();
+                break;
+            case RGBFormat.GRBA:
+                rgb.green = this.readByte();
+                rgb.red = this.readByte();
+                rgb.blue = this.readByte();
+                rgb.alpha = this.readByte();
+                break;
+            case RGBFormat.AGRB:
+                rgb.alpha = this.readByte();
+                rgb.green = this.readByte();
+                rgb.red = this.readByte();
+                rgb.blue = this.readByte();
+                break;
+            default:
+                throw new Error(`Unknown format: ${format}`);
+        }
+    
+        return rgb;
     }
 }
